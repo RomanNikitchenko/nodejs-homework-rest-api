@@ -1,7 +1,7 @@
 const messages = {
-  400: "Bad Request",
+  400: "Missing Fields",
   401: "Not Authorize",
-  404: "Fobidden",
+  403: "Fobidden",
   404: "Not Found",
   409: "Conflict",
 };

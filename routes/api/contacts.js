@@ -7,10 +7,11 @@ const { createError } = require("../../helpers");
 
 const router = express.Router();
 
+//проверяет на наличие свойств (name, email, phone)
 const contactAddSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().required(),
-  phone: Joi.string().required()
+  phone: Joi.string().required(),
 });
 
 router.get("/", async (req, res, next) => {
@@ -49,7 +50,16 @@ router.post("/", async (req, res, next) => {
 });
 
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  try {
+    const { contactId } = req.params;
+    const result = await contacts.removeContact(contactId);
+    if (!result) {
+      throw createError(404);
+    }
+    res.json({ message: "contact deleted" });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put("/:contactId", async (req, res, next) => {
@@ -61,7 +71,7 @@ router.put("/:contactId", async (req, res, next) => {
     const { contactId } = req.params;
     const result = await contacts.updateContact(contactId, req.body);
     if (!result) {
-      throw createError(404);
+      throw createError(400);
     }
     res.json(result);
   } catch (error) {
