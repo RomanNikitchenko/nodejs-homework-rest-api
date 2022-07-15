@@ -3,7 +3,8 @@ const fs = require("fs/promises");
 const path = require("path");
 
 //получаем абсолютный адрес расположения файла contacts.json
-const filePath = path.join(__dirname, "contacts.json");
+const filePath = path.join("db/contacts.json");
+console.log(filePath);
 
 //функция перезаписывает файл contacts.json
 const updataContacts = async (data) => {
