@@ -1,16 +1,16 @@
-const { Contact, addSchema } = require('../../models/contact');
+const { Contact, contactUpdateFavoriteSchema} = require('../../models/contact');
 const { createError } = require('../../helpers');
 
-const updateById = async (req, res, next) => {
+const updateStatusContact = async (req, res, next) => {
   try {
-    const { error } = addSchema.validate(req.body);
+    const { error } = contactUpdateFavoriteSchema.validate(req.body);
     if (error) {
       throw createError(400, error.message);
     }
     const { contactId } = req.params;
     const result = await Contact.findByIdAndUpdate(contactId, req.body, {new: true}); //в фигурных скобках обновляем версию обьекта
     if (!result) {
-      throw createError(400);
+      throw createError(400, "missing field favorite");
     }
     res.json(result);
   } catch (error) {
@@ -18,4 +18,4 @@ const updateById = async (req, res, next) => {
   }
 };
 
-module.exports = updateById;
+module.exports = updateStatusContact;
