@@ -8,10 +8,10 @@ const signup = async (req, res, next) => {
     const { error } = joiRegisterSchema.validate(req.body);
     if (error) {
       throw createError(400, 'Bad Request');
+      // throw createError(400, error.message); //выдает подсказку чего не хватает
     }
 
     const { password, email, subscription } = req.body;
-
     const user = await User.findOne({ email });
     if (user) {
       throw Conflict({
