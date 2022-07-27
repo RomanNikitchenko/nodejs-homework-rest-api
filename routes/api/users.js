@@ -5,6 +5,6 @@ const controllers = require('../../controllers/users');
 
 const router = express.Router();
 
-router.post('/current', auth, controllers.getCurrent);
+router.get('/current', auth, controllers.getCurrent);
 
 module.exports = router;
