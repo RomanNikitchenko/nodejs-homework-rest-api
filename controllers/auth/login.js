@@ -2,7 +2,7 @@ const { User, joiLoginSchema } = require('../../models/user');
 const { createError } = require('../../helpers');
 const { Unauthorized } = require('http-errors');
 const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const { SECRET_KEY } = process.env;
 
@@ -26,17 +26,17 @@ const login = async (req, res, next) => {
     }
 
     const payload = {
-      id: user._id
+      id: user._id,
     };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
     res.status(200).json({
       ResponseBody: {
-        token, 
+        token,
         user: {
           email,
           subscription: user.subscription,
-        }
-      }
+        },
+      },
     });
   } catch (error) {
     next(error);
