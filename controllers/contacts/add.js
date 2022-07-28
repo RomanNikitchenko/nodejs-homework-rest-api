@@ -3,12 +3,12 @@ const { createError } = require('../../helpers');
 
 const add = async (req, res, next) => {
   try {
-    const { _id } = req.user;
-    const { error } = addSchema.validate({ ...req.body, owner: _id });
+    const { error } = addSchema.validate(req.body);
     if (error) {
       throw createError(400, error.message);
     }
-    const result = await Contact.create(req.body);
+    const { _id } = req.user;
+    const result = await Contact.create({...req.body, owner: _id});
     res.status(201).json(result);
   } catch (error) {
     next(error);
