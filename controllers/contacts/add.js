@@ -1,9 +1,10 @@
-const { Contact, addSchema} = require('../../models/contact');
+const { Contact, addSchema } = require('../../models/contact');
 const { createError } = require('../../helpers');
 
 const add = async (req, res, next) => {
   try {
-    const { error } = addSchema.validate(req.body);
+    const { _id } = req.user;
+    const { error } = addSchema.validate({ ...req.body, owner: _id });
     if (error) {
       throw createError(400, error.message);
     }

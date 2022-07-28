@@ -1,4 +1,5 @@
 const express = require('express');
+
 const { auth } = require('../../middlewares');
 
 const controllers = require('../../controllers/users');

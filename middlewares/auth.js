@@ -4,13 +4,13 @@ const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = process.env;
 
 const auth = async (req, res, next) => {
-  const { authorization = "" } = req.headers;
-  const [bearer, token] = authorization.split(" ");
+  const { authorization = '' } = req.headers;
+  const [bearer, token] = authorization.split(' ');
   try {
-    if (bearer !== "Bearer") {
+    if (bearer !== 'Bearer') {
       throw Unauthorized({
         ResponseBody: {
-          message: "Not authorized",
+          message: 'Not authorized',
         },
       });
     }
@@ -21,7 +21,7 @@ const auth = async (req, res, next) => {
     if (!user) {
       throw Unauthorized({
         ResponseBody: {
-          message: "Not authorized",
+          message: 'Not authorized',
         },
       });
     }
@@ -29,7 +29,7 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    if (error.message = "invalid signature") {
+    if ((error.message = 'invalid signature')) {
       error.status = 401;
     }
     next(error);
