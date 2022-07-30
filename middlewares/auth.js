@@ -18,7 +18,8 @@ const auth = async (req, res, next) => {
     const { id } = jwt.verify(token, SECRET_KEY);
     const user = await User.findById(id);
 
-    if (!user) {
+    // controllers.logout меняет токин на null
+    if (!user || !user.token) {
       throw Unauthorized({
         ResponseBody: {
           message: 'Not authorized',
@@ -29,9 +30,9 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    if ((error.message = 'invalid signature')) {
-      error.status = 401;
-    }
+    // if ((error.message = 'invalid signature')) {
+    //   error.status = 401;
+    // }
     next(error);
   }
 };

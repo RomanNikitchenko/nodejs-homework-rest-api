@@ -17,6 +17,7 @@ const login = async (req, res, next) => {
     const { password, email } = req.body; //пользователь ввел пароль, логин, подписка
     const user = await User.findOne({ email }); // находим в базе данных пользователя по email
     const passCompare = bcrypt.compareSync(password, user.password); // сравниваем введенный пароль с паролем пользователя которого нашли по email
+
     if (!user || !passCompare) {
       throw Unauthorized({
         ResponseBody: {
@@ -28,7 +29,10 @@ const login = async (req, res, next) => {
     const payload = {
       id: user._id,
     };
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '3h' });
+    await User.findByIdAndUpdate(user._id, { token }); 
+
     res.status(200).json({
       ResponseBody: {
         token,

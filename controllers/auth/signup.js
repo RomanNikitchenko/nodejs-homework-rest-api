@@ -28,6 +28,7 @@ const signup = async (req, res, next) => {
       email,
       subscription,
     });
+    
     res.status(201).json({
       ResponseBody: {
         user: {
