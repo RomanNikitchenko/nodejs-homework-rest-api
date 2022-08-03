@@ -20,10 +20,12 @@ const updateAvatar = async (req, res, next) => {
 
     await fs.rename(tempUpload, resultUpload); //Метод fs.rename() используется для асинхронного переименования файла по указанному старому пути в заданный новый путь. Он перезапишет файл назначения, если он уже существует.
 
-    const image = await Jimp.read(resultUpload);
-    image.resize(250, 250);
+    // jimp - для обработки изображений (аватарок)
+    const image = await Jimp.read(`${resultUpload}`); // прочитать по адресу
+    image.resize(250, 250); // задать размер (250Х250)
+    image.write(`${resultUpload}`); // записать по адресу
 
-    const avatarURL = path.join('public', 'avatars', imageName);
+    const avatarURL = path.join('avatars', imageName);
 
     await User.findByIdAndUpdate(req.user._id, { avatarURL }); //в первом параметре находит объект по req.user._id во втором параметре что обновить у этого объекта
 
