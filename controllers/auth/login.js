@@ -14,8 +14,8 @@ const login = async (req, res, next) => {
       // throw createError(400, error.message); //выдает подсказку чего не хватает
     }
 
-    const { password, email } = req.body; //пользователь ввел пароль, логин, подписка
-    const user = await User.findOne({ email }); // находим в базе данных пользователя по email
+    const { password, email } = req.body; //пользователь ввел пароль, логин
+    const user = await User.findOne({ email }); // находим в базе данных объект по email пользователя
     const passCompare = bcrypt.compareSync(password, user.password); // сравниваем введенный пароль с паролем пользователя которого нашли по email
 
     if (!user || !passCompare) {
@@ -31,7 +31,7 @@ const login = async (req, res, next) => {
     };
 
     const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '3h' });
-    await User.findByIdAndUpdate(user._id, { token }); 
+    await User.findByIdAndUpdate(user._id, { token }); // в базу данных добавляем поле токен 
 
     res.status(200).json({
       ResponseBody: {
