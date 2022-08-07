@@ -18,10 +18,10 @@ const login = async (req, res, next) => {
     const user = await User.findOne({ email }); // находим в базе данных объект по email пользователя
     const passCompare = bcrypt.compareSync(password, user.password); // сравниваем введенный пароль с паролем пользователя которого нашли по email
 
-    if (!user || !passCompare) {
+    if (!user || !user.verify || !passCompare) {
       throw Unauthorized({
         ResponseBody: {
-          message: 'Email or password is wrong',
+          message: 'Email is wrong or not verify, or password is wrong',
         },
       });
     }

@@ -1,8 +1,9 @@
 const { User, joiRegisterSchema } = require('../../models/user');
-const { createError } = require('../../helpers');
+const { createError, sendEmail } = require('../../helpers');
 const { Conflict } = require('http-errors');
 const bcrypt = require('bcryptjs');
 const gravatar = require('gravatar'); // пакетик для генерации аватарак 
+const { nanoid } = require('nanoid'); //=> "V1StGXR8_Z5jdHi6B-myT" //для генерации строки с произвольными символами 
 
 const signup = async (req, res, next) => {
   try {
@@ -30,8 +31,10 @@ const signup = async (req, res, next) => {
     //Для засолки пароля
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
-    //передаем в пакет email пользователя, по email генерируем аватарку для пользователя
+    //В пакет gravatar передаем email пользователя, по email генерируем аватарку для пользователя
     const avatarURL = gravatar.url(email);
+
+    const verificationToken = nanoid();
 
     //создаем нового пользователя в базе данных
     const result = await User.create({
@@ -39,7 +42,15 @@ const signup = async (req, res, next) => {
       email,
       subscription,
       avatarURL,
+      verificationToken,
     });
+
+    const mail = {
+      to: email, // кому письмо
+      subject: "Подтверждение email", // заголовок письма
+      html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Подтвердить email</a>` // содержимое письма
+    };
+    await sendEmail(mail);
     
     // пользователь успешно создан в базу данных статус 201 тело запроса обьект ResponseBody
     res.status(201).json({
@@ -48,6 +59,7 @@ const signup = async (req, res, next) => {
           email,
           subscription,
           avatarURL,
+          verificationToken
         },
       },
     });
