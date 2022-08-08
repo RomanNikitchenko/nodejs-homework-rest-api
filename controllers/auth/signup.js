@@ -2,8 +2,8 @@ const { User, joiRegisterSchema } = require('../../models/user');
 const { createError, sendEmail } = require('../../helpers');
 const { Conflict } = require('http-errors');
 const bcrypt = require('bcryptjs');
-const gravatar = require('gravatar'); // пакетик для генерации аватарак 
-const { nanoid } = require('nanoid'); //=> "V1StGXR8_Z5jdHi6B-myT" //для генерации строки с произвольными символами 
+const gravatar = require('gravatar'); // пакетик для генерации аватарак
+const { v4: uuidv4 } = require('uuid'); // ⇨ '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed'
 
 const signup = async (req, res, next) => {
   try {
@@ -34,7 +34,7 @@ const signup = async (req, res, next) => {
     //В пакет gravatar передаем email пользователя, по email генерируем аватарку для пользователя
     const avatarURL = gravatar.url(email);
 
-    const verificationToken = nanoid();
+    const verificationToken = uuidv4();
 
     //создаем нового пользователя в базе данных
     const result = await User.create({
@@ -48,9 +48,9 @@ const signup = async (req, res, next) => {
     const mail = {
       to: email, // кому письмо
       subject: "Подтверждение email", // заголовок письма
-      html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Подтвердить email</a>` // содержимое письма
+      html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Подтвердить email</a>` // содержимое письма // клик по ссылки это get запрос
     };
-    await sendEmail(mail);
+    await sendEmail(mail);// функция для отправки писем через сервис SendGrid
     
     // пользователь успешно создан в базу данных статус 201 тело запроса обьект ResponseBody
     res.status(201).json({
