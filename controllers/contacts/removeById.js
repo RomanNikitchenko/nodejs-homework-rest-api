@@ -8,7 +8,7 @@ const removeById = async (req, res, next) => {
     if (!result) {
       throw createError(404);
     }
-    res.json({ message: "contact deleted" });
+    res.json({ message: "contact deleted!" });
   } catch (error) {
     next(error);
   }
