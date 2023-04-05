@@ -3,7 +3,7 @@ const messages = {
   401: "Not Authorize",
   403: "Fobidden",
   404: "Not Found",
-  409: "Conflict",
+  409: "Conflict Conflict",
 };
 
 const createError = (status, message = messages[status]) => {
